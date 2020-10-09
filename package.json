@@ -1,0 +1,37 @@
+{
+  "name": "insomnia-plugin-workspaces-sync",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-work:barrymi/super-plugin-insomnia.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "insomnia": {
+    "name": "workspaces-sync",
+    "displayName": "Workspaces Sync",
+    "description": "Sync workspaces to github",
+    "images": {
+      "icon": "",
+      "cover": ""
+    },
+    "publisher": {
+      "name": "barry",
+      "icon": ""
+    },
+    "applications": {
+      "designer": "*",
+      "core": "*",
+      "cli": "*"
+    }
+  },
+  "dependencies": {
+    "@octokit/rest": "^18.0.6",
+    "rethinkdb": "^2.4.2"
+  }
+}
