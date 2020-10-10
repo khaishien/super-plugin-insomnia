@@ -18,7 +18,7 @@ module.exports.workspaceActions = [
 
       const workspaceObj = JSON.parse(ex);
       const workspaceData = workspaceObj.resources.find(
-        (el) => el._type === 'workspace'
+        el => el._type === 'workspace',
       );
       const {
         _id: workspaceId,
@@ -30,7 +30,7 @@ module.exports.workspaceActions = [
         {
           workspaceId,
         },
-        ex
+        ex,
       );
 
       await updateDictionary({
@@ -50,7 +50,7 @@ module.exports.workspaceActions = [
 
       const content = fs.readFileSync(
         '/users/barry/Desktop/export.json',
-        'utf8'
+        'utf8',
       );
       await context.data.import.raw(content);
     },

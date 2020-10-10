@@ -2,8 +2,10 @@
   "name": "insomnia-plugin-workspaces-sync",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "build": "babel src --extensions \".ts,.js,.tsx\" --out-dir dist",
+    "watch": "yarn build --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,13 +27,38 @@
       "icon": ""
     },
     "applications": {
-      "designer": "*",
-      "core": "*",
-      "cli": "*"
+      "core": "*"
     }
   },
   "dependencies": {
+    "@emotion/core": "^10.0.35",
     "@octokit/rest": "^18.0.6",
-    "rethinkdb": "^2.4.2"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.11.6",
+    "@babel/node": "^7.10.5",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-react": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
+    "@emotion/babel-preset-css-prop": "^10.0.27",
+    "@types/react": "^16.9.51",
+    "@types/react-dom": "^16.9.8",
+    "@typescript-eslint/eslint-plugin": "^4.4.0",
+    "@typescript-eslint/parser": "^4.4.0",
+    "eslint": "^7.11.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-import-resolver-typescript": "^2.3.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.21.4",
+    "eslint-plugin-react-hooks": "^4.1.2",
+    "prettier": "^2.1.2",
+    "typescript": "^4.0.3"
   }
 }
