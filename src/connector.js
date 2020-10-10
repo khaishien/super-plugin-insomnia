@@ -1,29 +1,33 @@
 const { Octokit } = require('@octokit/rest');
 
-const AUTH_TOKEN = 'd4f93c83f9d6d953e236ad44b9df582468d6f20f';
-const REPO_OWNER = 'massiveinfinity';
-const REPO = 'temp-api-repo';
+const AUTH_TOKEN = '';
+const REPO_OWNER = '';
+const REPO = '';
 
 const octokit = new Octokit({
   auth: AUTH_TOKEN,
 });
 
 const doSomething = async () => {
-  const res = await octokit.repos.getContent({
-    owner: REPO_OWNER,
-    repo: REPO,
-    path: 'test.json',
-  });
-  console.log('##res', res);
+  try {
+    const res = await octokit.repos.getContent({
+      owner: REPO_OWNER,
+      repo: REPO,
+      path: 'dictionary.json',
+    });
+    console.log('##res', res);
 
-  const { status, data } = res;
+    const { status, data } = res;
 
-  if (status === 200) {
-    const { content } = data;
-    const fileContent = Buffer.from(content, 'base64').toString('utf8');
-    console.log('FileContent:', fileContent);
+    if (status === 200) {
+      const { content } = data;
+      const fileContent = Buffer.from(content, 'base64').toString('utf8');
+      console.log('FileContent:', fileContent);
 
-    console.log('Length: ' + JSON.parse(fileContent)[0]);
+      console.log(`Length: ${JSON.parse(fileContent)[0]}`);
+    }
+  } catch (err) {
+    console.log('error', err);
   }
 };
 
@@ -55,7 +59,7 @@ function main() {
     // doAction();
   } catch (err) {
     console.log('error', err);
-    console.log('message:' + err.message);
+    console.log(`message:${err.message}`);
   }
 }
 
