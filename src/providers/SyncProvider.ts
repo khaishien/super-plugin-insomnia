@@ -5,6 +5,10 @@ abstract class SyncProvider {
     this.insomniaContext = insomniaContext;
   }
 
+  abstract async receive(): Promise<void>;
+
+  abstract async send(): Promise<void>;
+
   protected async importToInsomnia(content: string): Promise<void> {
     await this.insomniaContext.data.import.raw(content);
   }

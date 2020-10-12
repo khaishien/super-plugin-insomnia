@@ -1,13 +1,8 @@
-enum IInsomniaDataType {
-  Workspace = 'Workspace',
-  Request = 'Request',
-  RequestGroup = 'RequestGroup',
-}
-
-enum IInsomniaRequestMethod {
-  GET = 'GET',
-  POST = 'POST',
-}
+import {
+  IInsomniaDataType,
+  IInsomniaExportType,
+  IInsomniaRequestMethod,
+} from './enums';
 
 interface IInsomniaApp {
   dialog(title: string, html: HTMLElement): void;
@@ -109,17 +104,7 @@ interface IInsomniaWorkspaceAction {
   action: IInsomniaWorkspaceActionFunction;
 }
 
-enum IInsomniaExportType {
-  Export = 'export',
-  Workspace = 'workspace',
-  Request = 'request',
-  RequestGroup = 'request_group',
-  Environment = 'environment',
-  Cookie = 'cookie_jar',
-  APISpec = 'api_spec',
-}
-
-interface IInsomniaExport {
+export interface IInsomniaExport {
   resources: [IInsomniaExportResource];
   _type: IInsomniaExportType;
   ['__export_date']: Date;

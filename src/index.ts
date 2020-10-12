@@ -5,11 +5,12 @@ import ReactDOM from 'react-dom';
 import { Settings } from './components';
 import Store from './store';
 import GithubService from './services/github';
+import GitHubSyncProvider from './providers/GitHubSyncProvider';
 // import { updateDictionary, updateWorkspace } from './sync.js';
 
 const workspaceActions: IInsomniaWorkspaceAction[] = [
   {
-    label: 'Sync with Github',
+    label: `Sync with Github`,
     icon: 'fa-star',
     action: async (context, models) => {
       console.log('## context', context);
@@ -31,17 +32,8 @@ const workspaceActions: IInsomniaWorkspaceAction[] = [
       });
       githubService.getRepoContent({ path: 'dictionary.json' });
 
-      const ex = await context.data.export.insomnia({
-        includePrivate: false,
-        format: 'json',
-        // workspace: models.workspace,
-      });
-
-      console.log('##ex', JSON.parse(ex));
-
-      const data = JSON.parse(ex);
-      const types = data.resources.map(el => el._type);
-      console.log('types', types);
+      const provider = new GitHubSyncProvider(context);
+      provider.send();
 
       // const workspaceObj = JSON.parse(ex);
       // const workspaceData = workspaceObj.resources.find(
@@ -73,13 +65,11 @@ const workspaceActions: IInsomniaWorkspaceAction[] = [
     label: 'Import',
     icon: 'fa-star',
     action: async (context, models) => {
-      console.log('##asfad');
-
-      const content = fs.readFileSync(
-        '/users/barry/Desktop/export.json',
-        'utf8',
-      );
-      await context.data.import.raw(content);
+      // const content = fs.readFileSync(
+      //   '/users/barry/Desktop/export.json',
+      //   'utf8',
+      // );
+      // await context.data.import.raw(content);
     },
   },
   {
