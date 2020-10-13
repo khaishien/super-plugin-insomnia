@@ -1,27 +1,23 @@
 import { Octokit } from '@octokit/rest';
 
-interface IGithubService {
+export interface IGithubService {
   authToken: string;
   owner: string;
   repo: string;
 }
 
-interface IGithubServiceRepoContent {
-  data: string | null;
-}
-
 interface IGithubServiceRepoRequest {
   path: string;
-  content: string;
+  content: IDataContent;
   message: string;
 }
 
 class GithubService {
-  octokit: Octokit;
+  private octokit: Octokit;
 
-  owner: string;
+  private owner: string;
 
-  repo: string;
+  private repo: string;
 
   constructor({ authToken, owner, repo }: IGithubService) {
     this.octokit = new Octokit({ auth: authToken });
@@ -29,26 +25,27 @@ class GithubService {
     this.repo = repo;
   }
 
-  async getRepoContent({
+  public async getRepoContent({
     path,
   }: {
     path: string;
-  }): Promise<IGithubServiceRepoContent> {
+  }): Promise<IDataContent> {
     try {
       const res = await this.octokit.repos.getContent({
         owner: this.owner,
         repo: this.repo,
         path,
       });
-
+      console.log('getRepoContent res=>', res);
       const { status, data } = res;
 
       if (status === 200) {
-        const { content } = data;
+        const { content, sha } = data;
         const fileContent = Buffer.from(content, 'base64').toString('utf8');
 
         return {
-          data: fileContent,
+          data: JSON.parse(fileContent),
+          sha,
         };
       }
 
@@ -56,17 +53,26 @@ class GithubService {
         data: null,
       };
     } catch (err) {
-      return { data: null };
+      console.log('getRepoContent err=>', err);
+      return { data: null, sha: undefined };
     }
   }
 
-  async createOrUpdateFileContents({
+  public async createOrUpdateFileContents({
     path,
     content,
     message,
   }: IGithubServiceRepoRequest): Promise<boolean> {
     try {
-      const contentBuffer = Buffer.from(content).toString('base64');
+      console.log('createOrUpdateFileContents => content', content);
+      let { data } = content;
+      if (typeof data === 'object') {
+        data = JSON.stringify(data);
+      }
+      console.log('createOrUpdateFileContents => data', data);
+      const contentBuffer = Buffer.from(data).toString('base64');
+
+      const { sha } = await this.getRepoContent({ path });
 
       const res = await this.octokit.repos.createOrUpdateFileContents({
         owner: this.owner,
@@ -74,6 +80,7 @@ class GithubService {
         path,
         message,
         content: contentBuffer,
+        sha,
       });
 
       if (res.status === 200) {
@@ -82,6 +89,7 @@ class GithubService {
 
       return false;
     } catch (err) {
+      console.log('createOrUpdateFileContents => err', err);
       return false;
     }
   }

@@ -1,24 +1,33 @@
+import { IInsomniaContext } from '../@types/insomnia';
+
 abstract class SyncProvider {
-  private insomniaContext: IInsomniaContext;
+  protected insomniaContext: IInsomniaContext;
 
   constructor(insomniaContext: IInsomniaContext) {
     this.insomniaContext = insomniaContext;
   }
 
-  abstract async receive(): Promise<void>;
+  abstract async pull(): Promise<void>;
 
-  abstract async send(): Promise<void>;
+  abstract async push(): Promise<void>;
 
-  protected async importToInsomnia(content: string): Promise<void> {
-    await this.insomniaContext.data.import.raw(content);
+  public async importToInsomnia(content: IDataContent): Promise<void> {
+    if (content?.data) {
+      let { data } = content;
+      if (typeof data === 'object') {
+        data = JSON.stringify(data);
+      }
+
+      await this.insomniaContext.data.import.raw(data);
+    }
   }
 
-  protected async exportFromInsomnia(): Promise<string> {
+  protected async exportFromInsomnia(): Promise<IDataContent> {
     const data = await this.insomniaContext.data.export.insomnia({
       includePrivate: false,
       format: 'json',
     });
-    return JSON.stringify(JSON.parse(data), null, 2);
+    return { data: JSON.parse(data) };
   }
 }
 

@@ -1,75 +1,43 @@
-import fs from 'fs';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
+import { IInsomniaWorkspaceAction } from './@types/insomnia';
 
 import { Settings } from './components';
-import Store from './store';
-import GithubService from './services/github';
 import GitHubSyncProvider from './providers/GitHubSyncProvider';
 // import { updateDictionary, updateWorkspace } from './sync.js';
 
 const workspaceActions: IInsomniaWorkspaceAction[] = [
   {
-    label: `Sync with Github`,
-    icon: 'fa-star',
+    label: `Pull from Github`,
+    icon: 'fa-download',
     action: async (context, models) => {
       console.log('## context', context);
       console.log('## models', models);
 
-      const store = new Store(context);
-      const apiToken = await store.getAPIToken();
-      const repoOwner = await store.getRepoOwner();
-      const repoName = await store.getRepoName();
-
-      console.log('apiToken', apiToken);
-      console.log('repoOwner', repoOwner);
-      console.log('repoName', repoName);
-
-      const githubService = new GithubService({
-        authToken: apiToken,
-        owner: repoOwner,
-        repo: repoName,
-      });
-      githubService.getRepoContent({ path: 'dictionary.json' });
-
       const provider = new GitHubSyncProvider(context);
-      provider.send();
-
-      // const workspaceObj = JSON.parse(ex);
-      // const workspaceData = workspaceObj.resources.find(
-      //   el => el._type === 'workspace',
-      // );
-      // const {
-      //   _id: workspaceId,
-      //   name: workspaceName,
-      //   modified: modifiedAt,
-      // } = workspaceData;
-
-      // await updateWorkspace(
-      //   {
-      //     workspaceId,
-      //   },
-      //   ex,
-      // );
-
-      // await updateDictionary({
-      //   workspaceId,
-      //   workspaceName,
-      //   modifiedAt,
-      // });
-
-      //   fs.writeFileSync('/users/barry/Desktop/export.json', ex);
+      await provider.pull();
     },
   },
   {
-    label: 'Import',
-    icon: 'fa-star',
+    label: `FORCE Pull from Github`,
+    icon: 'fa-download',
     action: async (context, models) => {
-      // const content = fs.readFileSync(
-      //   '/users/barry/Desktop/export.json',
-      //   'utf8',
-      // );
-      // await context.data.import.raw(content);
+      console.log('## context', context);
+      console.log('## models', models);
+
+      const provider = new GitHubSyncProvider(context);
+      await provider.forcePull();
+    },
+  },
+  {
+    label: `Push from Github`,
+    icon: 'fa-upload',
+    action: async (context, models) => {
+      console.log('## context', context);
+      console.log('## models', models);
+
+      const provider = new GitHubSyncProvider(context);
+      await provider.push();
     },
   },
   {
